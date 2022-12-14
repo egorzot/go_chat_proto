@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option go_package = "./proto";
+
+message Topic {
+  string title = 1;
+  Type type = 2;
+  enum Type {
+    UNKNOWN_TYPE = 0;
+    PERSONAL = 1;
+    GROUP = 2;
+  }
+}
+
+message Msg {
+  string author = 1;
+  string text = 2;
+  Topic topic = 3;
+}
+
+message ConnectRequest {
+  string username = 1;
+}
+
+message JoinGroupRequest {
+  string topic = 1;
+}
+
+message LeftGroupRequest {
+  string topic = 1;
+}
+
+message CreateGroupRequest {
+  string topic = 1;
+}
+
+message SendMessageRequest {
+  string topic = 1;
+  string text = 2;
+}
+
+message ListChannelsResponse {
+  repeated Topic topics = 1;
+}
+
+
+service Chat {
+  rpc Connect (ConnectRequest) returns (stream Msg) {}
+  rpc JoinGroupChat (JoinGroupRequest) returns (google.protobuf.Empty) {}
+  rpc LeftGroupChat (LeftGroupRequest) returns (google.protobuf.Empty) {}
+  rpc CreateGroupChat (CreateGroupRequest) returns (google.protobuf.Empty) {}
+  rpc SendMessage (SendMessageRequest) returns (google.protobuf.Empty) {}
+  rpc ListChannels (google.protobuf.Empty) returns (ListChannelsResponse) {}
+}
